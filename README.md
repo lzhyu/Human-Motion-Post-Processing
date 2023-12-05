@@ -63,6 +63,7 @@ python -m repr_conversion.rot2mesh --input_path path/to/smpl/file
 
 ## 👀 Render SMPL mesh
 Please refer to [TEMOS](https://github.com/Mathux/TEMOS)
+
 We provide `visualize/process_mesh.py` to convert the generated mesh to their format.
 
 ## 👏 Acknowledgments
