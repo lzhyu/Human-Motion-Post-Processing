@@ -12,7 +12,7 @@ We also provide tools to convert other representations to smpl parameters.
 
 |       Initial Motion        |     Optimized Motion        |
 | :--------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------: |
-| <video src="./assets/sample1_smpl_init.gif" /> | <video src="./assets/sample1_smpl_after.gif" /> |
+| <video src="[/assets/sample1_smpl_init.gif](https://github.com/lzhyu/Human-Motion-Processing/blob/main/assets/sample1_smpl_init.gif)" /> | <video src="./assets/sample1_smpl_after.gif" /> |
 | <video src="./assets/sample2_smpl_init.gif" /> | <video src="./assets/sample2_smpl_after.gif" /> |
 | <video src="./assets/sample3_init.mp4" /> | <video src="./assets/sample2_smpl_after.gif" /> |
 </div>
