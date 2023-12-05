@@ -2,3 +2,6 @@ smplx==0.1.28
 tqdm==4.64
 trimesh==3.15
 scipy==1.7
+matplotlib
+chumpy @ git+https://github.com/scottandrews/chumpy.git@fe51783e0364bf1e9b705541e7d77f894dd2b1ac
+h5py
