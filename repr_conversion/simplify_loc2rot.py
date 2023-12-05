@@ -19,7 +19,6 @@ class joints2smpl:
         self.joint_category = "AMASS"
         self.num_smplify_iters = 150
         self.fix_foot = False
-        print(config.SMPL_MODEL_DIR)
         smplmodel = smplx.create(config.SMPL_MODEL_DIR,
                                  model_type="smpl", gender="neutral", ext="pkl",
                                  batch_size=self.batch_size).to(self.device)

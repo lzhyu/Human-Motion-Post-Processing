@@ -35,7 +35,7 @@ def identify_zones(contact_labels: torch.Tensor):
         
 
 from torch.nn.functional import relu
-def post_optimize(pose: torch.Tensor, get_xyz, contact_labels: torch.Tensor = None):
+def post_optimize(pose: torch.Tensor, get_xyz, contact_labels: torch.Tensor = None, verbose = False):
     # pose: 1, T, n_joints, 6
     # Rotation2xyz: nn.Module
     # contact_labels: B,T,2 (left_contact, right_contact)
@@ -87,16 +87,18 @@ def post_optimize(pose: torch.Tensor, get_xyz, contact_labels: torch.Tensor = No
             continue
         # if velocity not too high
         if slide_distance.norm(p=2)<0.04:
-            print('indentifying one-legged stand')
+            if verbose:
+                print('indentifying one-legged stand')
 
-            print(t)
-            print(slide_distance)
+                print(t)
+                print(slide_distance)
             pose[:,t+1:,-1, :3] -= slide_distance
     
     # STEP 4: if skating range is long, then it might be valid
     SHIFT_THRESHOLD = 0.08
-    print(l_zones)
-    print(r_zones)
+    if verbose:
+        print(l_zones)
+        print(r_zones)
     index_to_remain_l = []
     
     for index, zone in enumerate(l_zones):
@@ -115,9 +117,10 @@ def post_optimize(pose: torch.Tensor, get_xyz, contact_labels: torch.Tensor = No
         if max_shift < SHIFT_THRESHOLD:
             index_to_remain_r.append(index)
     r_zones = [r_zones[index] for index in index_to_remain_r]
-    print('remaining zones')
-    print(l_zones)
-    print(r_zones)
+    if verbose:
+        print('remaining zones')
+        print(l_zones)
+        print(r_zones)
 
     # STEP 5: optimize
     # set learnable parameters
@@ -207,7 +210,7 @@ def post_optimize(pose: torch.Tensor, get_xyz, contact_labels: torch.Tensor = No
         r_joint_xyz.retain_grad()
         loss.backward()
         optimizer.step()
-        if i%100==0:
+        if i%100==0 and verbose:
             print(f'step:{i}, loss: {loss.item()}')
 
     return full_pose

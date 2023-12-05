@@ -115,6 +115,7 @@ if __name__=='__main__':
                         help="SMPL parameters, should be XX.pt or XX.npy , and the size should be 1,V,C,T")
     parser.add_argument("--render_motion", action= "store_true")
     parser.add_argument("--save_mesh", action= "store_true")
+    parser.add_argument("--verbose", action= "store_true")
     parser.add_argument("--render_path", default="./results", type=str)
     parser.add_argument("--device", default="cuda", type=str, choices = ['cpu', 'cuda'])
     parser.add_argument("--dataset", default="humanml", type=str, choices = ['humanact12', 'uestc', 'humanml'], 
@@ -149,7 +150,7 @@ if __name__=='__main__':
         np.save(render_path / 'before_smpl_vertices.npy', vertices.cpu().numpy())
 
     refined_motion, additional_skating = refine_pose(sample, lambda *args, **kwargs: get_xyz(rot2xyz, *args, **kwargs), \
-                contact_labels=None,  verbose = True)
+                contact_labels=None,  verbose = args.verbose)
     np.save(render_path / 'optimized_pose.npy', refined_motion.cpu().numpy())
     
     if args.save_mesh:
