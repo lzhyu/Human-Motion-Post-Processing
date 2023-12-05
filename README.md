@@ -36,7 +36,7 @@ pip install -r requirements.txt
 
 ## 💻 Post-Processing
 ```shell
-python -m foot_utils.foot_optim --input_path path/to/motion/file
+python foot_optim.py --input_path path/to/motion/file
 ```
 **Some Optional Parameters**
 - `--render_motion` render the motion before and after optimization.

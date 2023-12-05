@@ -45,6 +45,8 @@ from argparse import ArgumentParser
 import argparse
 
 if __name__ == '__main__':
+    # input: B, T, 1, V
+    # output: B, T, 1, V, 3
     parser = argparse.ArgumentParser()
     parser.add_argument("--input_path", type=str, required=True, help='smpl parameters')
     args = parser.parse_args()
@@ -54,8 +56,8 @@ if __name__ == '__main__':
         sample = torch.tensor(sample)
     else:
         sample = torch.load(args.input_path)
-    # should be B, T, C, V
+    
     assert sample.shape[-1] == 263
 
-    positions = recover_from_ric(sample)
+    positions = recover_from_ric(sample.float(), joints_num=22)
     np.save(args.input_path[:-4] + '_joints.npy', positions.numpy())
