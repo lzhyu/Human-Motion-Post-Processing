@@ -14,7 +14,7 @@ We also provide tools to convert other representations to smpl parameters.
 | :--------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------: |
 | <video src="./assets/sample1_smpl_init.gif" /> | <video src="./assets/sample1_smpl_after.gif" /> |
 | <video src="./assets/sample2_smpl_init.gif" /> | <video src="./assets/sample2_smpl_after.gif" /> |
-| <video src="./assets/sample3_init.mp4" /> | <video src="./assets/sample2_smpl_after.gif" /> |
+| <video src="./assets/sample3_init.mp4" /> | - |
 </div>
 
 
