@@ -7,13 +7,11 @@ We also provide tools to convert other representations to smpl parameters.
 </div>
 
 <div align="center">
-
-<!-- <img src="https://cdn.discordapp.com/attachments/941582479117127680/1111543600879259749/20230526075532.png" width="350px"> -->
-
-|       Initial Motion        |     Optimized Motion        |
+  
+|      <div style="width:350px">Initial Motion </div>        |     Optimized Motion        |
 | :--------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------: |
-| <video src="[/assets/sample1_smpl_init.gif](https://github.com/lzhyu/Human-Motion-Processing/blob/main/assets/sample1_smpl_init.gif)" /> | <video src="./assets/sample1_smpl_after.gif" /> |
-| <video src="./assets/sample2_smpl_init.gif" /> | <video src="./assets/sample2_smpl_after.gif" /> |
+| ![/assets/sample1_smpl_init.gif](https://github.com/lzhyu/Human-Motion-Processing/blob/main/assets/sample1_smpl_init.gif) | ![/assets/sample1_smpl_init.gif](https://github.com/lzhyu/Human-Motion-Processing/blob/main/assets/sample1_smpl_after.gif) |
+| ![/assets/sample1_smpl_init.gif](https://github.com/lzhyu/Human-Motion-Processing/blob/main/assets/sample2_smpl_init.gif) | ![/assets/sample1_smpl_init.gif](https://github.com/lzhyu/Human-Motion-Processing/blob/main/assets/sample2_smpl_after.gif) |
 | <video src="./assets/sample3_init.mp4" /> | <video src="./assets/sample2_smpl_after.gif" /> |
 </div>
 
