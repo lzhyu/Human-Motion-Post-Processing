@@ -1,0 +1,4 @@
+smplx==0.1.28
+tqdm==4.64
+trimesh==3.15
+scipy==1.7
