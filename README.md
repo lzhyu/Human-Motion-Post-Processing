@@ -19,7 +19,7 @@ Our method eliminates foot skating in continuous walking motions.
   
 |      Initial Motion       |     Optimized Motion        |
 | :--------------------------------------: | :--------------------------------------------------------------------: |
-| <video src="https://github.com/lzhyu/Human-Motion-Processing/assets/40299992/d4074ece-eb0b-4a4e-bfcc-38ad45dfb9c3" width=40 /> | <video src="https://github.com/lzhyu/Human-Motion-Processing/assets/40299992/c341e068-445b-41c6-9187-82b1e695a143" width=40  /> |
+| ![/assets/sample3_init.gif](https://github.com/lzhyu/Human-Motion-Processing/blob/main/assets/sample3_init.gif) |![/assets/sample3_after.gif](https://github.com/lzhyu/Human-Motion-Processing/blob/main/assets/sample3_after.gif) |
 </div>
 
 ## ⚡Quick Start
