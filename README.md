@@ -47,6 +47,11 @@ python foot_optim.py --mode dir --input_path path/to/motion/dir
 - `--render_path PATH` specifies the folder where results are put in.
 -  `--mode` specifies whether to optimize all motion files in a directory
 
+Have a try with:
+```shell
+python foot_optim.py --mode file --input_path ./assets/sample_rot.npy --render_motion
+```
+
 ## 💻 Representation Conversion
 Please check the input and output formats in the code.
 
