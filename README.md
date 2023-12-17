@@ -81,8 +81,7 @@ We provide `visualize/process_mesh.py` to convert the generated mesh to their fo
 
 ## 👏 Acknowledgments
 
-Our code is based on:
-[MDM](https://github.com/GuyTevet/motion-diffusion-model/), [GMD](https://github.com/korrawe/guided-motion-diffusion), [joints2smpl](https://github.com/wangsen1312/joints2smpl), [text-to-motion](https://github.com/EricGuo5513/text-to-motion)
+Our code is based on: [GMD](https://github.com/korrawe/guided-motion-diffusion), [joints2smpl](https://github.com/wangsen1312/joints2smpl), [text-to-motion](https://github.com/EricGuo5513/text-to-motion)
 
 ## 📚 License
 This code is distributed under an MIT LICENSE.
