@@ -1,5 +1,5 @@
 # Human Motion Post-Processing
-Welcome to our repository, a dedicated space offering an innovative tool designed to minimize foot skating in human motion sequences. This tool is user-friendly and ensures that no additional artifacts are introduced.
+Welcome to our repository, a dedicated space offering an innovative tool designed to minimize foot skating in human motion sequences. This tool is user-friendly and introduces no additional artifacts.
 
 In addition, we provide versatile tools capable of converting various representations into SMPL parameters, further enhancing user convenience.
 ## ▶️ Demo
