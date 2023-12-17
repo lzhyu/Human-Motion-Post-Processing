@@ -1,5 +1,5 @@
 # Human Motion Post-Processing
-Welcome to our repository, a dedicated space offering an innovative tool designed to minimize foot skating in human motion sequences. This tool is user-friendly and ensures that no additional artifacts are introduced.
+Welcome to our repository, a dedicated space offering an innovative tool designed to minimize foot skating in human motion sequences. This tool is user-friendly and introduces no additional artifacts.
 
 In addition, we provide versatile tools capable of converting various representations into SMPL parameters, further enhancing user convenience.
 ## ▶️ Demo
@@ -87,4 +87,4 @@ Our code is based on:
 ## 📚 License
 This code is distributed under an MIT LICENSE.
 
-Note that our code depends on other libraries, including CLIP, SMPL, SMPL-X, PyTorch3D, and uses datasets that each have their own respective licenses that must also be followed.
+Note that our code depends on other libraries, including SMPL, SMPL-X, PyTorch3D, and uses datasets that each have their own respective licenses that must also be followed.
