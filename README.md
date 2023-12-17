@@ -1,8 +1,7 @@
 # Human Motion Post-Processing
-This repository provides code for reducing foot skating in human motion sequences. 
+Welcome to our repository, a dedicated space offering an innovative tool designed to minimize foot skating in human motion sequences. This tool is user-friendly and ensures that no additional artifacts are introduced.
 
-We also provide tools to convert other representations to SMPL parameters.
-
+In addition, we provide versatile tools capable of converting various representations into SMPL parameters, further enhancing user convenience.
 ## ▶️ Demo
 
 Our method eliminates foot skating when the person is standing on one foot.
@@ -36,12 +35,17 @@ pip install -r requirements.txt
 
 ## 💻 Post-Processing
 ```shell
-python foot_optim.py --input_path path/to/motion/file
+python foot_optim.py --mode file --input_path path/to/motion/file
+```
+or 
+```shell
+python foot_optim.py --mode dir --input_path path/to/motion/dir
 ```
 **Some Optional Parameters**
-- `--render_motion` render the motion before and after optimization.
+- `--render_motion` whether to render the motion before and after optimization.
 - `--save_mesh` save the smpl mesh before and after optimization.
 - `--render_path PATH` specifies the folder where results are put in.
+-  `--mode` specifies whether to optimize all motion files in a directory
 
 ## 💻 Representation Conversion
 Please check the input and output formats in the code.
@@ -55,6 +59,10 @@ Joints to SMPL parameters
 ```shell
 python -m repr_conversion.simplify_loc2rot --input_path path/to/joint/file
 ```
+or
+```shell
+python -m repr_conversion.simplify_loc2rot --input_path path/to/joint/dir --mode dir
+```
 
 Smpl parameters to mesh
 ```shell
@@ -63,6 +71,7 @@ python -m repr_conversion.rot2mesh --input_path path/to/smpl/file
 
 ## 👀 Render SMPL mesh
 Please refer to [TEMOS](https://github.com/Mathux/TEMOS)
+
 We provide `visualize/process_mesh.py` to convert the generated mesh to their format.
 
 ## 👏 Acknowledgments

@@ -48,11 +48,9 @@ class joints2smpl:
             thetas, _ = self.joint2smpl(motions[sample_i])  # [nframes, njoints, 3]
             all_thetas.append(thetas.cpu().numpy())
         motions = np.concatenate(all_thetas, axis=0)
-        print('motions', motions.shape)
 
         print(f'Saving [{out_path}]')
         np.save(out_path, motions)
-        exit()
 
 
 
@@ -109,20 +107,39 @@ class joints2smpl:
 
         return thetas.clone().detach(), {'pose': new_opt_joints[0, :24].flatten().clone().detach(), 'betas': new_opt_betas.clone().detach(), 'cam': new_opt_cam_t.clone().detach()}
 
-
+from pathlib import Path
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    # input: numpy.array 1, T, V, 3
+    # input: np.ndarray 1, T, 22, 3
+    # output: np.ndarray 1, 25, 6, T
+    # the converted pose is in the same directory
     parser.add_argument("--input_path", type=str, required=True, help='Blender file or dir with blender files')
+    parser.add_argument("--mode", default="file", type=str, choices = ['dir', 'file'])
     parser.add_argument("--cuda", type=bool, default=True, help='')
     parser.add_argument("--device", type=int, default=0, help='')
     params = parser.parse_args()
-    motions = np.load(params.input_path, allow_pickle=True)
-    print(motions.shape)
-    num_frames = motions.shape[1]
-    simplify = joints2smpl(device_id=params.device, cuda=params.cuda, num_frames=num_frames)
+    if params.mode == 'file':
+        motions = np.load(params.input_path, allow_pickle=True)
+        # print(motions.shape)
+        num_frames = motions.shape[1]
+        simplify = joints2smpl(device_id=params.device, cuda=params.cuda, num_frames=num_frames)
 
-    
-    out_path = params.input_path.replace('.npy', '_rot.npy')
-    assert os.path.isfile(params.input_path) and params.input_path.endswith('.npy')
-    simplify.npy2smpl(motions, out_path)
+        out_path = params.input_path.replace('.npy', '_rot.npy')
+        assert os.path.isfile(params.input_path) and params.input_path.endswith('.npy')
+        simplify.npy2smpl(motions, out_path)
+    else:
+        motion_dir = Path(params.input_path)
+        assert motion_dir.is_dir()
+        # Note: you may select motion files here by adding conditions
+        motion_files = [str(x) for x in motion_dir.iterdir() if x.is_file() and (x.suffix in ['.pt', '.npy'])]
+        for f in tqdm(motion_files):
+            assert os.path.isfile(f) and f.endswith('.npy')
+            motions = np.load((f), allow_pickle=True)
+            assert motions.shape[-2:] == (22, 3), motions.shape
+            num_frames = motions.shape[1]
+            simplify = joints2smpl(device_id=params.device, cuda=params.cuda, num_frames=num_frames)
+            out_path = f.replace('.npy', '_rot.npy')
+            if os.path.exists(out_path):
+                continue
+            
+            simplify.npy2smpl(motions, out_path)

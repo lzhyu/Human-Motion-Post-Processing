@@ -6,6 +6,7 @@ def identify_zones(contact_labels: torch.Tensor):
     # T,
     # return list of frame indices
     T = contact_labels.size(0)
+    
     # label smoothing
     contact_labels = contact_labels.float()
     contact_labels[1:-1] = (contact_labels[1:-1] + contact_labels[:-2] + contact_labels[2:])/3
@@ -36,9 +37,6 @@ def identify_zones(contact_labels: torch.Tensor):
 
 from torch.nn.functional import relu
 def post_optimize(pose: torch.Tensor, get_xyz, contact_labels: torch.Tensor = None, verbose = False):
-    # pose: 1, T, n_joints, 6
-    # Rotation2xyz: nn.Module
-    # contact_labels: B,T,2 (left_contact, right_contact)
     """Refined the given motion
 
         Parameters
@@ -160,27 +158,6 @@ def post_optimize(pose: torch.Tensor, get_xyz, contact_labels: torch.Tensor = No
         # 1, 24, 3, 60
         l_joint_xyz = pose_xyz[:, [l_foot_idx], :, :]  # [B, 1, 3, T]
         r_joint_xyz = pose_xyz[:, [r_foot_idx], :, :]  # [B, 1, 3, T]
-
-
-        # V1
-        # l_joint_vel = torch.linalg.norm(l_joint_xyz[:, :, :, 1:] - l_joint_xyz[:, :, :, :-1].detach(), axis=2)  # [B, 2, T]
-        # r_joint_vel = torch.linalg.norm(r_joint_xyz[:, :, :, 1:] - r_joint_xyz[:, :, :, :-1].detach(), axis=2)  # [B, 2, T]
-        # l_joint_vel[~l_fc_mask] = 0
-        # r_joint_vel[~r_fc_mask] = 0
-        # loss_foot = (l_joint_vel - torch.zeros_like(l_joint_vel, device = l_joint_vel.device))**2 + \
-        #     (r_joint_vel - torch.zeros_like(r_joint_vel, device = r_joint_vel.device))**2
-
-        # V2
-        # loss_foot = 0
-        # for zone in l_zones:
-        #     sub_seq = l_joint_xyz[0,:,:,zone] # 1, 3, T_sub
-        #     loss_foot += (sub_seq - sub_seq[:,:,0,None].detach()).norm(dim=1,p=2).sum(dim=0).sum(dim=0)
-            
-        # for zone in r_zones:
-        #     sub_seq = r_joint_xyz[0,:,:,zone]
-        #     loss_foot += (sub_seq - sub_seq[:,:,0,None].detach()).norm(dim=1,p=2).sum(dim=0).sum(dim=0)
-
-        # V3, smooth transition
 
         loss_foot = 0
         for zone in l_zones:

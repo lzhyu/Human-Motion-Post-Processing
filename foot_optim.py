@@ -8,7 +8,8 @@ from pathlib import Path
 from foot_utils.opt import *
 from argparse import ArgumentParser
 from repr_conversion.rotation2xyz import Rotation2xyz
-
+from tqdm import tqdm
+import os
 def refine_pose(motion, get_xyz, contact_labels=None, verbose=False, return_skating = True):
     """Refined the given motion and (optionally) provide visualization
 
@@ -104,15 +105,72 @@ def get_xyz(rot2xyz, sample, dataset, ground_height_param = None, get_height=Fal
         assert ground_height_param is None
         return sample_xyz, ground_height
         
+def optimize_motion_sample(args, motion_file: Path, index = 0):
+    
+    assert motion_file.suffix in ['.pt', '.npy'] 
+    if motion_file.suffix == '.npy':
+        sample = np.load(motion_file)
+        sample = torch.tensor(sample)
+        if sample.size(0)>1:
+            sample = sample[None]
+    else:
+        sample = torch.load(str(motion_file))
 
+    if sample.shape[:3] == (1, 25, 6):
+        pass
+    else:
+        print(f'Skipped! The shape of file {motion_file} is {sample.shape}. It needs to be (1, 25, 6, T).')
+        return 
+
+    sample = sample.to(args.device)
+
+    render_path = Path(args.render_path)
+    render_path.mkdir(exist_ok=True)
+    if os.path.exists(str(render_path / f'optimized_pose_{index}.npy')):
+        return 
+    if args.render_motion:
+        motion_xyz = get_xyz(rot2xyz, sample, args.dataset) 
+        motion_xyz_r = motion_xyz[0].permute(2,0,1).detach().cpu().numpy()# T, V, 3
+        plot_3d_motion(render_path/ f'motion_init_{index}.gif', paramUtil.t2m_kinematic_chain, motion_xyz_r, dataset=args.dataset, title='motion_init', fps=20)
+    
+    if args.save_mesh:
+        vertices = rot2xyz(sample, mask=None,
+                                    pose_rep='rot6d', translation=True, glob=True,
+                                    jointstype='vertices',
+                                    vertstrans=True)
+        # 1, V, 3, T
+        np.save(render_path / f'before_smpl_vertices_{index}.npy', vertices.cpu().numpy())
+
+    refined_motion, additional_skating = refine_pose(sample, lambda *args, **kwargs: get_xyz(rot2xyz, *args, **kwargs), \
+                contact_labels=None,  verbose = args.verbose)
+    np.save(render_path / f'optimized_pose_{index}.npy', refined_motion.cpu().numpy())
+    
+    if args.save_mesh:
+        vertices = rot2xyz(refined_motion, mask=None,
+                                    pose_rep='rot6d', translation=True, glob=True,
+                                    jointstype='vertices',
+                                    vertstrans=True)
+        # 1, V, 3, T
+        np.save(render_path / f'after_smpl_vertices_{index}.npy', vertices.cpu().numpy())
+
+    if args.render_motion:
+        plot_3d_motion_foot(render_path/ f'motion_fc_{index}.gif', paramUtil.t2m_kinematic_chain, motion_xyz_r, \
+                    additional_skating[0].cpu().numpy(), dataset=args.dataset, title='motion_fc', fps=20)
+
+        refined_motion_xyz = get_xyz(rot2xyz, refined_motion, args.dataset)
+        refined_motion_xyz = refined_motion_xyz[0].permute(2,0,1).cpu().numpy() # T,V,3
+        plot_3d_motion(render_path/ f'motion_optimized_{index}.gif', paramUtil.t2m_kinematic_chain, \
+                       refined_motion_xyz, dataset=args.dataset, title='motion_optimized', fps=20)
 
 if __name__=='__main__':
+    # for each file
     # input: SMPL pose 1, 25, 6, T
     # output: SMPL Pose 1, 25, 6, T
     # the last joint is (global_x, global_y, global_z, 0, 0, 0)
     parser = ArgumentParser()
     parser.add_argument("--input_path", default="", type=str, 
                         help="SMPL parameters, should be XX.pt or XX.npy , and the size should be 1,V,C,T")
+    parser.add_argument("--mode", default="file", type=str, choices = ['dir', 'file'])
     parser.add_argument("--render_motion", action= "store_true")
     parser.add_argument("--save_mesh", action= "store_true")
     parser.add_argument("--verbose", action= "store_true")
@@ -122,51 +180,16 @@ if __name__=='__main__':
                         help="In some datasets the human body is upside-down.")
     args = parser.parse_args()
     rot2xyz = Rotation2xyz(device=args.device, dataset=None)
-    
-    if args.input_path[-3:] == 'npy':
-        sample = np.load(args.input_path)
-        sample = torch.tensor(sample)
-        if sample.size(0)>1:
-            sample = sample[None]
+    if args.mode == 'file': 
+        optimize_motion_sample(args, Path(args.input_path))
     else:
-        sample = torch.load(args.input_path)
+        # parse files
+        motion_dir = Path(args.input_path)
+        assert motion_dir.is_dir()
+        # Note: you may select motion files here by adding conditions
+        motion_files = [x for x in motion_dir.iterdir() if x.is_file() and (x.suffix in ['.pt', '.npy'])]# and 'out' in x.stem and 'rot' in x.stem
+        for i, f in tqdm(enumerate(motion_files)):
+            optimize_motion_sample(args, f, i)
 
-    assert sample.shape[:3] == (1, 25, 6)
-    sample = sample.to(args.device)
 
-    render_path = Path(args.render_path)
-    render_path.mkdir(exist_ok=True)
-    if args.render_motion:
-        motion_xyz = get_xyz(rot2xyz, sample, args.dataset) 
-        motion_xyz_r = motion_xyz[0].permute(2,0,1).detach().cpu().numpy()# T, V, 3
-        plot_3d_motion(render_path/ f'motion_init.gif', paramUtil.t2m_kinematic_chain, motion_xyz_r, dataset=args.dataset, title='motion_init', fps=20)
-    
-    if args.save_mesh:
-        vertices = rot2xyz(sample, mask=None,
-                                    pose_rep='rot6d', translation=True, glob=True,
-                                    jointstype='vertices',
-                                    vertstrans=True)
-        # 1, V, 3, T
-        np.save(render_path / 'before_smpl_vertices.npy', vertices.cpu().numpy())
-
-    refined_motion, additional_skating = refine_pose(sample, lambda *args, **kwargs: get_xyz(rot2xyz, *args, **kwargs), \
-                contact_labels=None,  verbose = args.verbose)
-    np.save(render_path / 'optimized_pose.npy', refined_motion.cpu().numpy())
-    
-    if args.save_mesh:
-        vertices = rot2xyz(refined_motion, mask=None,
-                                    pose_rep='rot6d', translation=True, glob=True,
-                                    jointstype='vertices',
-                                    vertstrans=True)
-        # 1, V, 3, T
-        np.save(render_path / 'after_smpl_vertices.npy', vertices.cpu().numpy())
-
-    if args.render_motion:
-        plot_3d_motion_foot(render_path/ f'motion_fc.gif', paramUtil.t2m_kinematic_chain, motion_xyz_r, \
-                    additional_skating[0].cpu().numpy(), dataset=args.dataset, title='motion_fc', fps=20)
-
-        refined_motion_xyz = get_xyz(rot2xyz, refined_motion, args.dataset)
-        refined_motion_xyz = refined_motion_xyz[0].permute(2,0,1).cpu().numpy() # T,V,3
-        plot_3d_motion(render_path/ f'motion_optimized.gif', paramUtil.t2m_kinematic_chain, \
-                       refined_motion_xyz, dataset=args.dataset, title='motion_optimized', fps=20)
 

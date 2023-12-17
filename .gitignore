@@ -1,3 +1,5 @@
 *.npy
 __pycache__/
 results/
+run_batch.sh
+/__pycache__/
