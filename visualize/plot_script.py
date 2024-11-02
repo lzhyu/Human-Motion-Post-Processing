@@ -12,6 +12,8 @@ from textwrap import wrap
 
 def plot_3d_motion(save_path, kinematic_tree, joints, title, dataset, figsize=(3, 3), fps=120, radius=3,
                    vis_mode='default', gt_frames=[]):
+    # y is height
+    # 
     matplotlib.use('Agg')
     # plt.rcParams['animation.ffmpeg_path'] = '/opt/conda/envs/mdm_env/bin/ffmpeg'
 

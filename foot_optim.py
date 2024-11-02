@@ -10,6 +10,8 @@ from argparse import ArgumentParser
 from repr_conversion.rotation2xyz import Rotation2xyz
 from tqdm import tqdm
 import os
+from visualize.utils import get_xyz
+
 def refine_pose(motion, get_xyz, contact_labels=None, verbose=False, return_skating = True):
     """Refined the given motion and (optionally) provide visualization
 

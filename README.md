@@ -74,7 +74,13 @@ Smpl parameters to mesh
 python -m repr_conversion.rot2mesh --input_path path/to/smpl/file
 ```
 
+
+## 👀 Render skeleton from SMPL parameters
+```shell
+python -m visualize.plot_smpl --input_path assets/smpl_sample.npy 
+```
 ## 👀 Render SMPL mesh
+
 Please refer to [TEMOS](https://github.com/Mathux/TEMOS)
 
 We provide `visualize/process_mesh.py` to convert the generated mesh to their format.

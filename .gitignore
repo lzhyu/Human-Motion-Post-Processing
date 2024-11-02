@@ -4,3 +4,5 @@ results/
 run_batch.sh
 *.pyc
 run_batch.out
+!body_models/smpl/J_regressor_extra.npy
+!body_models/smpl/smplfaces.npy
